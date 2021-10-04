@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://World/Area2D.gd" type="Script" id=1]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://World/World.gd" type="Script" id=3]
+[ext_resource path="res://Pachinko Sprites/wall.png" type="Texture" id=4]
+[ext_resource path="res://Ball/BallGiver.tscn" type="PackedScene" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 10, 361.174 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 10, 359.944 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 239.159, 10 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 2.99484, 300.144 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 229.397, 2.95612 )
+
+[node name="World" type="Node"]
+script = ExtResource( 3 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 4.50898, 717.538 )
+
+[node name="PachinkoBall" parent="Player/Position2D" index="0"]
+position = Vector2( 92.2135, -652.943 )
+
+[node name="WallCollision" type="StaticBody2D" parent="."]
+position = Vector2( -12.3628, 361.79 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="LeftWall" type="CollisionShape2D" parent="WallCollision"]
+position = Vector2( 2, 1 )
+shape = SubResource( 1 )
+
+[node name="RightWall" type="CollisionShape2D" parent="WallCollision"]
+position = Vector2( 502.333, -0.756226 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallCollision"]
+position = Vector2( 252.213, 368.527 )
+shape = SubResource( 3 )
+
+[node name="Roof" type="StaticBody2D" parent="WallCollision"]
+position = Vector2( 12.3628, -361.79 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="WallCollision/Roof"]
+polygon = PoolVector2Array( 0.317108, 120.511, 3.43525, 88.4385, 9.22609, 60.8206, 18.1351, 46.1208, 32.3895, 34.9846, 44.4166, 30.0846, 69.8072, 25.1847, 100.543, 21.6211, 138.406, 18.5029, 174.933, 17.612, 203.442, 16.7211, 230.169, 17.1666, 276.496, 18.5029, 314.359, 20.2847, 314.359, -0.651379, 1.65345, 13.603 )
+
+[node name="BallRetainer" type="StaticBody2D" parent="WallCollision"]
+position = Vector2( 25.8842, 208.224 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="Sprite" type="Sprite" parent="WallCollision/BallRetainer"]
+position = Vector2( 0, -149.434 )
+scale = Vector2( 3, 19.9572 )
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallCollision/BallRetainer"]
+position = Vector2( -0.0834198, -148.623 )
+shape = SubResource( 4 )
+
+[node name="BallDelete" type="Area2D" parent="."]
+position = Vector2( 248.777, 714.962 )
+collision_layer = 8
+collision_mask = 4
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallDelete"]
+shape = SubResource( 5 )
+
+[node name="BallGiver" parent="." instance=ExtResource( 5 )]
+position = Vector2( 13.3484, 105.452 )
+collision_layer = 2
+collision_mask = 0
+
+[connection signal="body_entered" from="BallDelete" to="Player/Position2D/PachinkoBall" method="_on_BallDelete_body_entered"]
+[connection signal="body_entered" from="BallGiver" to="Player/Position2D" method="_on_BallGiver_body_entered"]
+
+[editable path="Player"]
